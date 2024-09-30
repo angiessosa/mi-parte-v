@@ -48,7 +48,7 @@ const Login = () => {
         </nav>
 
         <div className="container">
-          <div className="form-container">
+          <div className="form-containerlogin">
             <h2 className="h2r">Iniciar Sesión</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
@@ -56,7 +56,7 @@ const Login = () => {
                 <input
                   type="text"
                   value={numeroDocumento}
-                  className="form-controll"
+                  className="form-controllogin"
                   id="numeroDocumento"
                   required
                   onChange={(e) => setNumeroDocumento(e.target.value)}
@@ -67,7 +67,7 @@ const Login = () => {
                 <input
                   type="password"
                   value={claveUsuario}
-                  className="form-controll"
+                  className="form-controllogin"
                   id="claveUsuario"
                   required
                   onChange={(e) => setClaveUsuario(e.target.value)}
