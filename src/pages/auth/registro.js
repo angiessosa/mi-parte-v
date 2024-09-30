@@ -178,7 +178,9 @@ const Registro = () => {
                 <li className={hasUppercase ? 'valid' : ''}>Al menos una letra mayúscula</li>
                 <li className={hasLowercase ? 'valid' : ''}>Al menos una letra minúscula</li>
                 <li className={hasNumber ? 'valid' : ''}>Al menos un número</li>
-                <li className={hasSpecialChar ? 'valid' : ''}>Al menos un carácter especial</li>
+                <li className={hasSpecialChar ? 'valid' : ''}>
+                    Al menos un carácter especial (&quot;! @ # $ % ^ &amp; * , . ? : | &gt; &lt;&quot;)
+                </li>
             </ul>
         </div>
 
