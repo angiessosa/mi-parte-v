@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from typing import List
-from app.models import Usuario, Taller
-from app.schemas import UsuarioCreate, UsuarioLogin, TallerCreate, TallerResponse, TallerSchema, UsuarioTaller
+from app.models import Usuario
+from app.schemas import UsuarioCreate, UsuarioLogin, TallerCreate, UsuarioTallerInsert
 import bcrypt
 
 router = APIRouter()
@@ -71,7 +70,6 @@ def update_estado_usuario(idUsuario: int, estado: str, db: Session = Depends(get
 
 
 
-
 #login
 @router.post("/login")
 def login(user: UsuarioLogin, db: Session = Depends(get_db)):
@@ -95,43 +93,25 @@ def login(user: UsuarioLogin, db: Session = Depends(get_db)):
 
 
 
+#Crear taller
+@router.post("/taller")
+def agendar_taller(taller: TallerCreate, usuario_taller: UsuarioTallerInsert, db: Session = Depends(get_db)):
 
-# Crear un nuevo taller
-@router.post("/taller", response_model=TallerResponse)
-def crear_taller(taller: TallerCreate, db: Session = Depends(get_db)):
-    nuevo_taller = Taller(
-        fechaYHora=taller.fechaYHora,
-        numFicha=taller.numFicha,
-        tema=taller.tema,
-        observaciones=taller.observaciones
+    #Llamada al procedimiento almacenado
+    db.execute(
+        "CALL insertarTaller(:centroFormacion, :jornada, :coordinacion, :numFicha, :tema, :fechaYHora, :observaciones, :idUsuario)",
+        {
+            "centroFormacion": taller.centroFormacion,
+            "jornada": taller.jornada,
+            "coordinacion": taller.coordinacion,
+            "numFicha": taller.numFicha,
+            "tema": taller.tema,
+            "fechaYHora": taller.fechaYHora,
+            "observaciones": taller.observaciones,
+            "idUsuario": usuario_taller.idUsuario  # Profesional asignado???
+        }
     )
-    db.add(nuevo_taller)
+
     db.commit()
-    db.refresh(nuevo_taller)
-    return nuevo_taller
 
-# Obtener todos los talleres
-@router.get("/taller", response_model=List[TallerResponse])
-def listar_talleres(db: Session = Depends(get_db)):
-    return db.query(Taller).all()
-
-
-@router.post("/taller", response_model=TallerSchema)
-def create_taller(taller: TallerCreate, db: Session = Depends(get_db)):
-    # Crear el taller primero
-    nuevo_taller = Taller(
-        fechaYHora=taller.fechaYHora,
-        numFicha=taller.numFicha,
-        tema=taller.tema,
-        observaciones=taller.observaciones
-    )
-    db.add(nuevo_taller)
-    db.commit()
-    db.refresh(nuevo_taller)
-
-    # Guardar la relación en la tabla usuario_taller
-    usuario_taller = UsuarioTaller(idUsuario=taller.idUsuario, idTaller=nuevo_taller.idTaller)
-    db.add(usuario_taller)
-    db.commit()
-    
-    return nuevo_taller
+    return {"message": "Taller agendado exitosamente"}
