@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Date, Time
 from sqlalchemy.orm import relationship
 from .database import Base
+
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -14,7 +15,6 @@ class Usuario(Base):
     claveUsuario = Column(String(60))
     idRol = Column(Integer)
     estado = Column(String, default="pendiente")  # Estado por defecto "pendiente"
-    talleres = relationship('UsuarioTaller', back_populates='usuario')
 
 class Rol(Base):
     __tablename__ = "rol"
@@ -24,20 +24,29 @@ class Rol(Base):
 
 class Taller(Base):
     __tablename__ = "taller"
-    
-    idTaller = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    fechaYHora = Column(DateTime, nullable=False)
-    numFicha = Column(String(11), index=True)
-    tema = Column(String(50), index=True)
-    observaciones = Column(String(1000), nullable=True)
-    usuarios = relationship('UsuarioTaller', back_populates='taller')
+
+    idTaller =  Column(Integer, primary_key=True, index=True)
+    centroFormacion = Column(String(100))
+    jornada = Column(String(50))
+    coordinacion =  Column(String(100))
+    numFicha = Column(String(11))
+    tema = Column(String(50))
+    fechaYHora = Column(DateTime)
+    observaciones = Column(String(1000))
 
 class UsuarioTaller(Base):
-    __tablename__ = 'usuario_taller'
-    
-    id = Column(Integer, primary_key=True, index=True)
-    idUsuario = Column(Integer, ForeignKey('usuarios.idUsuario'))
-    idTaller = Column(Integer, ForeignKey('taller.idTaller'))
+    __tablename__ = "usuario_taller"
 
-    usuario = relationship('Usuario', back_populates='talleres')
-    taller = relationship('Taller', back_populates='usuarios')
+    id = Column(Integer, primary_key=True, index=True)
+    idUsuario =  Column(Integer, ForeignKey("usuarios.idUsuario"))
+    idTaller = Column(Integer, ForeignKey("taller.idTaller"))
+
+class Horarios(Base):
+    __tablename__ = "horarios"
+
+    idHorario =  Column(Integer, primary_key=True, index=True)
+    idUsuario = Column(Integer, ForeignKey("usuarios.idUsuario"))
+    idTaller = Column(Integer, ForeignKey("taller.idTaller"))
+    fecha = Column(Date)
+    horaInicio = Column(Time)
+    horaFin = Column(Time)
