@@ -15,27 +15,15 @@ class UsuarioLogin(BaseModel):
     numeroDocumento: str
     claveUsuario: str
 
-class TallerSchema(BaseModel):
-    fechaYHora: datetime
-    numFicha: str
-    tema: str
-    observaciones: str = None  # Puede ser nulo
 
 class TallerCreate(BaseModel):
-    fechaYHora: datetime
+    centroFormacion: str
+    jornada: str
+    coordinacion: str
     numFicha: str
     tema: str
+    fechaYHora: datetime
     observaciones: str
 
-class TallerResponse(TallerCreate):
-    idTaller: int
-
-class UsuarioTallerBase(BaseModel):
+class UsuarioTallerInsert(BaseModel):
     idUsuario: int
-    idTaller: int
-
-class UsuarioTallerCreate(UsuarioTallerBase):
-    pass
-
-class UsuarioTaller(UsuarioTallerBase):
-    id: int
