@@ -126,11 +126,20 @@ def seleccion_fecha(fecha: FechaSeleccionada, db: Session = Depends(get_db)):
         return {"error": "Formato de fecha inválido. Asegúrate de enviar la fecha en formato yyyy-MM-dd"}
 
 
+#Mostrar talleres hoy
+@router.get("/buscarTalleres")
+def get_all_talleres(db: Session = Depends(get_db)):
+    return db.query(Taller).all()
 
-#RECUPERAR CONTRASEÑA
-
-
-
+@router.get("/buscarTalleres/hoy")
+def get_talleres_hoy(db: Session = Depends(get_db)):
+    # Obtener la fecha actual
+    today = datetime.now().date()
+    
+    # Consulta para obtener talleres cuya fecha es hoy
+    talleres_hoy = db.query(Taller).filter(Taller.fechaYHora == today).all()
+    
+    return talleres_hoy
 
 
 
