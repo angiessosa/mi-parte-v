@@ -162,7 +162,7 @@ const AgendarTaller = () => {
                             <Form.Label>2. Jornada</Form.Label>
                             <Form.Select className='opcion' name="jornada" onChange={(e) => setjornada(e.target.value)}>
                                 <option value="">Seleccione la Jornada</option>
-                                <option value="manana">Mañana</option>
+                                <option value="mixta">Mixta</option>
                                 <option value="diurna">Diurna</option>
                                 <option value="noche">Noche</option>
                             </Form.Select>
